@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>Check List - استلام شفت التمريض</title>
+  <style>
+    body {font-family: Arial, sans-serif; background:#f7f7f7; direction: rtl; padding:20px;}
+    .container {max-width:600px; margin:auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+    label {display:block; margin:10px 0 5px;}
+    input, select, button {width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:5px;}
+    button {background:#28a745; color:#fff; border:none; cursor:pointer;}
+    button:hover {background:#218838;}
+    #msg {margin-top:15px; font-weight:bold;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>✅ استلام شفت التمريض - الطوارئ</h2>
+    <form id="checklistForm">
+      <label>الاسم</label>
+      <input type="text" name="الاسم" required>
+
+      <label>التاريخ</label>
+      <input type="date" name="التاريخ" required>
+
+      <label>نظافة المكان</label>
+      <select name="نظافة المكان" required>
+        <option value="✔️ جيد">✔️ جيد</option>
+        <option value="❌ يحتاج متابعة">❌ يحتاج متابعة</option>
+      </select>
+
+      <label>الأدوية والمستهلكات</label>
+      <select name="الأدوية والمستهلكات" required>
+        <option value="✔️ متوفرة وصالحة">✔️ متوفرة وصالحة</option>
+        <option value="❌ ناقصة/منتهية">❌ ناقصة/منتهية</option>
+      </select>
+
+      <label>الأجهزة الطبية</label>
+      <select name="الأجهزة الطبية" required>
+        <option value="✔️ جميعها تعمل">✔️ جميعها تعمل</option>
+        <option value="❌ يوجد عطل">❌ يوجد عطل</option>
+      </select>
+
+      <label>المرضى</label>
+      <select name="المرضى" required>
+        <option value="✔️ الملفات والخطط مكتملة">✔️ الملفات والخطط مكتملة</option>
+        <option value="❌ يوجد نقص">❌ يوجد نقص</option>
+      </select>
+
+      <button type="submit">إرسال</button>
+    </form>
+    <p id="msg"></p>
+  </div>
+
+  <script>
+    const form = document.getElementById("checklistForm");
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const data = new FormData(form);
+
+      // عرض البيانات قبل الإرسال
+      for (const [key, value] of data.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+
+      fetch("YOUR_WEB_APP_URL_HERE", {
+        method: "POST",
+        body: data
+      })
+      .then(res => res.text())
+      .then(txt => {
+        console.log("Response:", txt);
+        document.getElementById("msg").innerText = "✅ تم الإرسال بنجاح";
+      })
+      .catch(err => {
+        console.error("Fetch Error:", err);
+        document.getElementById("msg").innerText = "❌ خطأ في الإرسال: " + err.message;
+      });
+    });
+  </script>
+</body>
+</html>
