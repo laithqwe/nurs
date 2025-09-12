@@ -56,21 +56,28 @@
     const form = document.getElementById("checklistForm");
     form.addEventListener("submit", e => {
       e.preventDefault();
-      const data = new FormData(form);
 
-      // عرض البيانات قبل الإرسال
-      for (const [key, value] of data.entries()) {
-        console.log(`${key}: ${value}`);
-      }
+      const obj = {
+        "الاسم": form["الاسم"].value,
+        "التاريخ": form["التاريخ"].value,
+        "نظافة المكان": form["نظافة المكان"].value,
+        "الأدوية والمستهلكات": form["الأدوية والمستهلكات"].value,
+        "الأجهزة الطبية": form["الأجهزة الطبية"].value,
+        "المرضى": form["المرضى"].value
+      };
+
+      console.log("Sending:", obj);
 
       fetch("https://script.google.com/macros/s/AKfycbwZGgiZgYycoHyrQsGfCIALhM3RaA5obkXxQXu-L1D9VEIy3h2UqlHpEGthT4MGW7w6_g/exec", {
         method: "POST",
-        body: data
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(obj)
       })
       .then(res => res.text())
       .then(txt => {
         console.log("Response:", txt);
         document.getElementById("msg").innerText = "✅ تم الإرسال بنجاح";
+        form.reset();
       })
       .catch(err => {
         console.error("Fetch Error:", err);
@@ -80,4 +87,3 @@
   </script>
 </body>
 </html>
-
