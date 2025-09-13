@@ -1,89 +1,81 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>Check List - استلام شفت التمريض</title>
-  <style>
-    body {font-family: Arial, sans-serif; background:#f7f7f7; direction: rtl; padding:20px;}
-    .container {max-width:600px; margin:auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-    label {display:block; margin:10px 0 5px;}
-    input, select, button {width:100%; padding:10px; margin-bottom:15px; border:1px solid #ccc; border-radius:5px;}
-    button {background:#28a745; color:#fff; border:none; cursor:pointer;}
-    button:hover {background:#218838;}
-    #msg {margin-top:15px; font-weight:bold;}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>شيك ليست طوارئ - شفت التمريض</title>
+<style>
+body {font-family: Arial, sans-serif; background:#f7f7f7; direction: rtl; padding:20px;}
+.container {max-width:600px; margin:auto; background:#fff; padding:20px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+h2 {text-align:center; color:#2c3e50;}
+table {width:100%; border-collapse: collapse; margin-top:20px;}
+th, td {border:1px solid #ccc; padding:10px; text-align:center;}
+th {background:#e9ecef;}
+input[type="text"], input[type="date"], textarea {width:95%; padding:5px; border:1px solid #aaa; border-radius:5px;}
+input[type="checkbox"] {transform:scale(1.3);}
+button {margin-top:20px; padding:10px 20px; background:#28a745; color:#fff; border:none; border-radius:5px; cursor:pointer;}
+button:hover {background:#218838;}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h2>✅ استلام شفت التمريض - الطوارئ</h2>
-    <form id="checklistForm">
-      <label>الاسم</label>
-      <input type="text" name="الاسم" required>
+<div class="container">
+<h2>شيك ليست طوارئ ✅ استلام شفت التمريض</h2>
 
-      <label>التاريخ</label>
-      <input type="date" name="التاريخ" required>
+<form id="checklistForm">
+  <label>الشفت: <input type="text" name="shift" required></label><br><br>
+  <label>التاريخ: <input type="date" name="date" required></label><br><br>
+  <label>اسم الممرضة: <input type="text" name="specialist" value="أدخل الاسم" required></label><br><br>
 
-      <label>نظافة المكان</label>
-      <select name="نظافة المكان" required>
-        <option value="✔️ جيد">✔️ جيد</option>
-        <option value="❌ يحتاج متابعة">❌ يحتاج متابعة</option>
-      </select>
+  <table>
+    <tr>
+      <th>بند التشييك</th>
+      <th>✔ / ✘</th>
+      <th>ملاحظات</th>
+    </tr>
 
-      <label>الأدوية والمستهلكات</label>
-      <select name="الأدوية والمستهلكات" required>
-        <option value="✔️ متوفرة وصالحة">✔️ متوفرة وصالحة</option>
-        <option value="❌ ناقصة/منتهية">❌ ناقصة/منتهية</option>
-      </select>
+    <script>
+      const items = [
+        "نظافة المكان",
+        "الأدوية والمستهلكات",
+        "الأجهزة الطبية كله جيد",
+        "المرضى"
+      ];
 
-      <label>الأجهزة الطبية</label>
-      <select name="الأجهزة الطبية" required>
-        <option value="✔️ جميعها تعمل">✔️ جميعها تعمل</option>
-        <option value="❌ يوجد عطل">❌ يوجد عطل</option>
-      </select>
-
-      <label>المرضى</label>
-      <select name="المرضى" required>
-        <option value="✔️ الملفات والخطط مكتملة">✔️ الملفات والخطط مكتملة</option>
-        <option value="❌ يوجد نقص">❌ يوجد نقص</option>
-      </select>
-
-      <button type="submit">إرسال</button>
-    </form>
-    <p id="msg"></p>
-  </div>
-
-  <script>
-    const form = document.getElementById("checklistForm");
-    form.addEventListener("submit", e => {
-      e.preventDefault();
-
-      const obj = {
-        "الاسم": form["الاسم"].value,
-        "التاريخ": form["التاريخ"].value,
-        "نظافة المكان": form["نظافة المكان"].value,
-        "الأدوية والمستهلكات": form["الأدوية والمستهلكات"].value,
-        "الأجهزة الطبية": form["الأجهزة الطبية"].value,
-        "المرضى": form["المرضى"].value
-      };
-
-      console.log("Sending:", obj);
-
-      fetch("https://script.google.com/macros/s/AKfycbwZGgiZgYycoHyrQsGfCIALhM3RaA5obkXxQXu-L1D9VEIy3h2UqlHpEGthT4MGW7w6_g/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(obj)
-      })
-      .then(res => res.text())
-      .then(txt => {
-        console.log("Response:", txt);
-        document.getElementById("msg").innerText = "✅ تم الإرسال بنجاح";
-        form.reset();
-      })
-      .catch(err => {
-        console.error("Fetch Error:", err);
-        document.getElementById("msg").innerText = "❌ خطأ في الإرسال: " + err.message;
+      items.forEach(item => {
+        document.write(`<tr>
+          <td>${item}</td>
+          <td><input type="checkbox" name="${item.replace(/ /g,'_')}_done"></td>
+          <td><textarea name="${item.replace(/ /g,'_')}_notes"></textarea></td>
+        </tr>`);
       });
-    });
-  </script>
+    </script>
+  </table>
+
+  <button type="submit">إرسال</button>
+</form>
+</div>
+
+<script>
+document.getElementById('checklistForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const data = new FormData(form);
+  const params = new URLSearchParams();
+  for(const pair of data.entries()) { params.append(pair[0], pair[1]); }
+
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyMxzQ4pgS8cI42eAttzB8Ekn5ax5MuwQzIJWD8gGwXjm0eFMIxIBkeBNqsLt0-ksNZ/exec';
+
+  fetch(WEB_APP_URL, {
+    method: 'POST',
+    body: params,
+    mode: 'no-cors'
+  })
+  .then(() => { 
+    alert("✅ تم تسجيل البيانات بنجاح!"); 
+    form.reset(); 
+  })
+  .catch(err => alert("❌ خطأ: " + err));
+});
+</script>
 </body>
 </html>
